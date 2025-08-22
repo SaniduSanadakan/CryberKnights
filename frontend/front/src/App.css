@@ -7,6 +7,11 @@
   flex-direction: column;
 }
 
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 80px);
+}
+
 /* Reset any default margins and paddings */
 * {
   box-sizing: border-box;
