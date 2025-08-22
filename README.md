@@ -52,7 +52,7 @@ CANTEC MIS introduces a **digital canteen platform** that integrates:
 1. **Clone the repository**
    
    ```bash
-   git clone https://github.com/your-username/cantec-mis.git
+   git clone https://github.com/SaniduSanadakan/CryberKnights.git
    cd cantec-mis
 
 2. **Install dependencies**
