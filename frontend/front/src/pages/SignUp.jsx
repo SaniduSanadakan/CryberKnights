@@ -1,252 +1,219 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './SignUp.css';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
-    name: '',
-    email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    role: 'student',
+    studentId: '',
+    staffId: ''
   });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
   };
 
   const validateForm = () => {
-    const newErrors = {};
-
-    // Username validation
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
-      newErrors.username = 'Username can only contain letters, numbers, and underscores';
+    if (!formData.username || !formData.password || !formData.email || !formData.firstName || !formData.lastName) {
+      setError('Please fill in all required fields');
+      return false;
     }
-
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = 'Full name is required';
-    } else if (formData.name.length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return false;
     }
-
-    // Email validation
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return false;
     }
-
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    if (formData.role === 'student' && !formData.studentId) {
+      setError('Student ID is required for student accounts');
+      return false;
     }
-
-    // Confirm password validation
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+    if (formData.role === 'staff' && !formData.staffId) {
+      setError('Staff ID is required for staff accounts');
+      return false;
     }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setError('');
+
     if (!validateForm()) {
       return;
     }
 
-    setIsLoading(true);
-
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
     try {
-      // In a real app, you would make an API call here
-      // For now, we'll simulate a successful registration
-      
-      // Store user data (in real app, this would be handled by backend)
-      const newUser = {
-        id: Date.now(),
+      setLoading(true);
+      const response = await axios.post('/api/auth/register', {
         username: formData.username,
-        name: formData.name,
+        password: formData.password,
         email: formData.email,
-        password: formData.password, // In real app, this would be hashed
-        role: 'student'
-      };
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        role: formData.role,
+        ...(formData.role === 'student' ? { studentId: formData.studentId } : { staffId: formData.staffId })
+      });
 
-      // Get existing users from localStorage (simulating database)
-      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-      
-      // Check if username already exists
-      if (existingUsers.find(user => user.username === formData.username)) {
-        setErrors({ username: 'Username already exists' });
-        setIsLoading(false);
-        return;
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        navigate(formData.role === 'staff' ? '/orders' : '/menu');
       }
-
-      // Check if email already exists
-      if (existingUsers.find(user => user.email === formData.email)) {
-        setErrors({ email: 'Email already registered' });
-        setIsLoading(false);
-        return;
-      }
-
-      // Add new user
-      existingUsers.push(newUser);
-      localStorage.setItem('users', JSON.stringify(existingUsers));
-
-      // Show success message
-      setIsSuccess(true);
-      
-      // Redirect to login after 2 seconds
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
-
-    } catch (error) {
-      setErrors({ general: 'Registration failed. Please try again.' });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error creating account. Please try again.');
+    } finally {
+      setLoading(false);
     }
-
-    setIsLoading(false);
   };
 
-  if (isSuccess) {
-    return (
-      <div className="signup-container">
-        <div className="signup-card">
-          <div className="success-message">
-            <div className="success-icon">✅</div>
-            <h2>Registration Successful!</h2>
-            <p>Your account has been created successfully.</p>
-            <p>Redirecting to login page...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="signup-container">
-      <div className="signup-card">
-        <div className="signup-header">
-          <h1>🍽️ Join Canteen MIS</h1>
-          <p>Create your account to start ordering</p>
-        </div>
-
+    <div className="signup-page">
+      <div className="signup-container">
+        <h1>Sign Up for Canteen MIS</h1>
+        <p>Create your account to access the canteen services</p>
+        
+        {error && <div className="error-message">{error}</div>}
+        
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="form-group">
-            <label htmlFor="username">Username *</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              placeholder="Choose a username"
-              className={errors.username ? 'error' : ''}
-            />
-            {errors.username && <span className="error-text">{errors.username}</span>}
+            <label htmlFor="role">Account Type</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <option value="student">Student</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="lastName">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
           <div className="form-group">
-            <label htmlFor="name">Full Name *</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Enter your full name"
-              className={errors.name ? 'error' : ''}
-            />
-            {errors.name && <span className="error-text">{errors.name}</span>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="email">Email *</label>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Enter your email"
-              className={errors.email ? 'error' : ''}
+              onChange={handleChange}
+              required
             />
-            {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password *</label>
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {formData.role === 'student' && (
+            <div className="form-group">
+              <label htmlFor="studentId">Student ID</label>
+              <input
+                type="text"
+                id="studentId"
+                name="studentId"
+                value={formData.studentId}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+
+          {formData.role === 'staff' && (
+            <div className="form-group">
+              <label htmlFor="staffId">Staff ID</label>
+              <input
+                type="text"
+                id="staffId"
+                name="staffId"
+                value={formData.staffId}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
-              onChange={handleInputChange}
-              placeholder="Create a password"
-              className={errors.password ? 'error' : ''}
+              onChange={handleChange}
+              required
             />
-            {errors.password && <span className="error-text">{errors.password}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password *</label>
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
-              onChange={handleInputChange}
-              placeholder="Confirm your password"
-              className={errors.confirmPassword ? 'error' : ''}
+              onChange={handleChange}
+              required
             />
-            {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
           </div>
 
-          {errors.general && (
-            <div className="error-message">
-              {errors.general}
-            </div>
-          )}
-
-          <button 
-            type="submit" 
-            className="signup-btn"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+          <button type="submit" className="signup-button" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
 
-        <div className="signup-footer">
-          <p>Already have an account? <a href="/login">Sign in here</a></p>
+        <div className="login-link">
+          Already have an account? <a href="/login">Log in</a>
         </div>
       </div>
     </div>

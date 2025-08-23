@@ -1,6 +1,9 @@
 .orders-container {
-  padding-top: 100px;
-  min-height: 100vh;
+  padding-block: 100px;
+  padding-inline: 20px;
+  max-inline-size: 1200px;
+  margin-inline: auto;
+  min-block-size: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -11,7 +14,7 @@
   padding: 40px 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  margin-bottom: 30px;
+  margin-block-end: 30px;
 }
 
 .orders-header h1 {
@@ -54,8 +57,8 @@
 
 .stat-icon {
   font-size: 2.5rem;
-  width: 60px;
-  height: 60px;
+  inline-size: 60px;
+  block-size: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +71,7 @@
   color: #666;
   font-size: 0.9rem;
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-block-end: 5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -82,8 +85,9 @@
 
 /* Filters Section */
 .filters-section {
-  max-width: 1200px;
-  margin: 0 auto 30px;
+  max-inline-size: 1200px;
+  margin-inline: auto;
+  margin-block: 0 30px;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
@@ -92,11 +96,11 @@
 
 .search-box {
   position: relative;
-  max-width: 400px;
+  max-inline-size: 400px;
 }
 
 .search-box input {
-  width: 100%;
+  inline-size: 100%;
   padding: 15px 45px 15px 20px;
   border: 2px solid #e9ecef;
   border-radius: 25px;
@@ -113,8 +117,8 @@
 
 .search-icon {
   position: absolute;
-  right: 15px;
-  top: 50%;
+  inset-inline-end: 15px;
+  inset-block-start: 50%;
   transform: translateY(-50%);
   color: #666;
   font-size: 1.1rem;
@@ -151,7 +155,7 @@
 
 /* Orders Content */
 .orders-content {
-  max-width: 1200px;
+  max-inline-size: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   display: grid;
@@ -162,7 +166,7 @@
 .orders-list h2 {
   color: #333;
   font-size: 1.5rem;
-  margin-bottom: 20px;
+  margin-block-end: 20px;
   font-weight: 600;
 }
 
@@ -263,227 +267,7 @@
   color: #667eea;
 }
 
-/* Order Details */
-.order-details {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  height: fit-content;
-  position: sticky;
-  top: 120px;
-}
-
-.details-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px 25px 20px;
-  border-bottom: 2px solid #f8f9fa;
-}
-
-.details-header h3 {
-  margin: 0;
-  color: #333;
-  font-size: 1.3rem;
-  font-weight: 600;
-}
-
-.close-details {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #666;
-  padding: 5px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.close-details:hover {
-  background: #f8f9fa;
-  color: #333;
-}
-
-.details-content {
-  padding: 20px 25px 25px;
-}
-
-.detail-section {
-  margin-bottom: 25px;
-}
-
-.detail-section h4 {
-  color: #333;
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-bottom: 1px solid #f8f9fa;
-  padding-bottom: 8px;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 8px 0;
-}
-
-.detail-label {
-  color: #666;
-  font-weight: 500;
-}
-
-.detail-value {
-  color: #333;
-  font-weight: 600;
-}
-
-.items-list {
-  margin-bottom: 15px;
-}
-
-.item-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #f8f9fa;
-}
-
-.item-row:last-child {
-  border-bottom: none;
-}
-
-.item-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.item-name {
-  color: #333;
-  font-weight: 500;
-}
-
-.item-quantity {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.item-price {
-  color: #667eea;
-  font-weight: 600;
-}
-
-.total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  border-top: 2px solid #f8f9fa;
-  margin-top: 15px;
-  font-size: 1.1rem;
-}
-
-.total-amount {
-  color: #667eea;
-  font-size: 1.2rem;
-}
-
-.special-instructions {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 10px;
-  color: #666;
-  font-style: italic;
-  margin: 0;
-}
-
-.status-info {
-  margin-bottom: 20px;
-}
-
-.current-status {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.status-label {
-  color: #666;
-  font-weight: 500;
-}
-
-.status-value {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.estimated-time,
-.completion-time,
-.cancellation-reason {
-  background: #f8f9fa;
-  padding: 10px 15px;
-  border-radius: 8px;
-  color: #666;
-  font-size: 0.9rem;
-  margin-top: 10px;
-}
-
-.status-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.status-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-}
-
-.status-btn.preparing {
-  background: #ffc107;
-  color: #333;
-}
-
-.status-btn.preparing:hover {
-  background: #e0a800;
-  transform: translateY(-2px);
-}
-
-.status-btn.completed {
-  background: #28a745;
-  color: white;
-}
-
-.status-btn.completed:hover {
-  background: #218838;
-  transform: translateY(-2px);
-}
-
-.status-btn.cancelled {
-  background: #dc3545;
-  color: white;
-}
-
-.status-btn.cancelled:hover {
-  background: #c82333;
-  transform: translateY(-2px);
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 1024px) {
   .orders-content {
     grid-template-columns: 1fr;
@@ -491,7 +275,7 @@
   
   .order-details {
     position: static;
-    margin-top: 30px;
+    margin-block-start: 30px;
   }
 }
 

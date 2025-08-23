@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -81,6 +83,7 @@ const Login = () => {
        u.username === formData.username && u.password === formData.password
      );
 
+
     if (user) {
       // Store user data in localStorage (in real app, you'd use proper auth tokens)
       localStorage.setItem('currentUser', JSON.stringify({
@@ -98,6 +101,13 @@ const Login = () => {
     }
     
     setIsLoading(false);
+
+//   const navigate = useNavigate();
+  
+//   const handleSignUp = () => {
+//     navigate('/signup');
+//     console.log('Navigate to sign up page');
+
   };
 
   return (

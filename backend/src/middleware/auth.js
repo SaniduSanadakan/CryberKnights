@@ -1,20 +1,36 @@
-const jwt = require('jsonwebtoken');
-const config = require('../config/db');
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-const authMiddleware = (req, res, next) => {
-    const token = req.headers['authorization'];
+dotenv.config();
+
+export const verifyToken = (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-        return res.status(403).send({ message: 'No token provided!' });
+        return res.status(403).json({ message: 'No token provided!' });
     }
 
-    jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: 'Unauthorized!' });
-        }
-        req.userId = decoded.id;
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
         next();
-    });
+    } catch (err) {
+        return res.status(401).json({ message: 'Unauthorized!' });
+    }
 };
 
-module.exports = authMiddleware;
+export const isStaff = (req, res, next) => {
+    if (req.user && req.user.role === 'staff') {
+        next();
+    } else {
+        res.status(403).json({ message: 'Requires staff role!' });
+    }
+};
+
+export const isStudent = (req, res, next) => {
+    if (req.user && req.user.role === 'student') {
+        next();
+    } else {
+        res.status(403).json({ message: 'Requires student role!' });
+    }
+};
