@@ -90,18 +90,31 @@
   color: #999;
 }
 
-.login-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-}
+ .login-btn {
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   color: white;
+   border: none;
+   padding: 14px 24px;
+   border-radius: 10px;
+   font-size: 16px;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   margin-top: 10px;
+ }
+
+ .login-button {
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   color: white;
+   border: none;
+   padding: 14px 24px;
+   border-radius: 10px;
+   font-size: 16px;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   margin-top: 10px;
+ }
 
 .login-button:hover:not(:disabled) {
   transform: translateY(-2px);
@@ -138,9 +151,69 @@
   transition: color 0.3s ease;
 }
 
-.signup-link:hover {
-  color: #764ba2;
-}
+ .signup-link:hover {
+   color: #764ba2;
+ }
+
+ .error-message {
+   background: #f8d7da;
+   color: #721c24;
+   padding: 12px;
+   border-radius: 8px;
+   margin-bottom: 20px;
+   border: 1px solid #f5c6cb;
+   text-align: center;
+ }
+
+ /* Demo Users Section */
+ .demo-users {
+   margin-top: 40px;
+   padding-top: 30px;
+   border-top: 2px solid #f8f9fa;
+ }
+
+ .demo-users h3 {
+   color: #333;
+   margin-bottom: 20px;
+   font-size: 1.1rem;
+   text-align: center;
+ }
+
+ .user-list {
+   display: grid;
+   gap: 15px;
+ }
+
+ .demo-user {
+   background: #f8f9fa;
+   padding: 15px;
+   border-radius: 10px;
+   border-left: 4px solid #667eea;
+   display: flex;
+   flex-direction: column;
+   gap: 5px;
+ }
+
+ .demo-user strong {
+   color: #333;
+   font-size: 1rem;
+ }
+
+ .demo-user span {
+   color: #666;
+   font-size: 0.9rem;
+ }
+
+ .role-badge {
+   background: #667eea;
+   color: white;
+   padding: 4px 8px;
+   border-radius: 12px;
+   font-size: 0.8rem;
+   font-weight: 500;
+   align-self: flex-start;
+   margin-top: 5px;
+ }
 
 /* Responsive design */
 @media (max-width: 480px) {
