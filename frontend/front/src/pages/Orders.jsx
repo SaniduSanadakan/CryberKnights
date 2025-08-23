@@ -2,23 +2,30 @@ import React, { useState, useEffect } from 'react';
 import './Orders.css';
 
 const Orders = () => {
-  const [orders, setOrders] = useState([]);
+  const [userOrders, setUserOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Sample orders data
+  // Get current user from localStorage (in real app, this would come from authentication)
+  const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {
+    id: 1,
+    name: "Saman Perera",
+    username: "saman",
+    email: "saman@example.com"
+  };
+
+  // Sample user orders data
   useEffect(() => {
-    const sampleOrders = [
+    const sampleUserOrders = [
       {
         id: 1,
         orderNumber: "ORD-001",
-        customerName: "John Doe",
-        items: [
-          { name: "Grilled Chicken Biryani", quantity: 1, price: "₹120" },
-          { name: "Tea", quantity: 2, price: "₹10" }
-        ],
-        totalAmount: "₹140",
+                 items: [
+           { name: "Grilled Chicken Biryani", quantity: 1, price: "Rs. 120" },
+           { name: "Tea", quantity: 2, price: "Rs. 10" }
+         ],
+         totalAmount: "Rs. 140",
         status: "completed",
         orderTime: "2024-01-15 12:30",
         completionTime: "2024-01-15 12:45",
@@ -28,13 +35,12 @@ const Orders = () => {
       {
         id: 2,
         orderNumber: "ORD-002",
-        customerName: "Jane Smith",
-        items: [
-          { name: "Paneer Butter Masala", quantity: 1, price: "₹90" },
-          { name: "Veg Fried Rice", quantity: 1, price: "₹80" },
-          { name: "Chocolate Brownie", quantity: 1, price: "₹40" }
-        ],
-        totalAmount: "₹210",
+                 items: [
+           { name: "Paneer Butter Masala", quantity: 1, price: "Rs. 90" },
+           { name: "Veg Fried Rice", quantity: 1, price: "Rs. 80" },
+           { name: "Chocolate Brownie", quantity: 1, price: "Rs. 40" }
+         ],
+         totalAmount: "Rs. 210",
         status: "preparing",
         orderTime: "2024-01-15 13:15",
         estimatedTime: "10 minutes",
@@ -44,12 +50,11 @@ const Orders = () => {
       {
         id: 3,
         orderNumber: "ORD-003",
-        customerName: "Mike Johnson",
-        items: [
-          { name: "Samosa", quantity: 3, price: "₹15" },
-          { name: "Coffee", quantity: 1, price: "₹15" }
-        ],
-        totalAmount: "₹60",
+                 items: [
+           { name: "Samosa", quantity: 3, price: "Rs. 15" },
+           { name: "Coffee", quantity: 1, price: "Rs. 15" }
+         ],
+         totalAmount: "Rs. 60",
         status: "pending",
         orderTime: "2024-01-15 13:45",
         paymentMethod: "card",
@@ -58,42 +63,25 @@ const Orders = () => {
       {
         id: 4,
         orderNumber: "ORD-004",
-        customerName: "Sarah Wilson",
-        items: [
-          { name: "Chicken Curry", quantity: 1, price: "₹100" },
-          { name: "Gulab Jamun", quantity: 2, price: "₹30" }
-        ],
-        totalAmount: "₹160",
+                 items: [
+           { name: "Chicken Curry", quantity: 1, price: "Rs. 100" },
+           { name: "Gulab Jamun", quantity: 2, price: "Rs. 30" }
+         ],
+         totalAmount: "Rs. 160",
         status: "cancelled",
         orderTime: "2024-01-15 14:00",
-        cancellationReason: "Customer requested cancellation",
+        cancellationReason: "Changed my mind",
         paymentMethod: "cash",
-        specialInstructions: ""
-      },
-      {
-        id: 5,
-        orderNumber: "ORD-005",
-        customerName: "David Brown",
-        items: [
-          { name: "Vada Pav", quantity: 2, price: "₹20" },
-          { name: "Tea", quantity: 1, price: "₹10" }
-        ],
-        totalAmount: "₹50",
-        status: "completed",
-        orderTime: "2024-01-15 14:30",
-        completionTime: "2024-01-15 14:40",
-        paymentMethod: "card",
         specialInstructions: ""
       }
     ];
-    setOrders(sampleOrders);
+    setUserOrders(sampleUserOrders);
   }, []);
 
   // Filter orders based on status and search term
-  const filteredOrders = orders.filter(order => {
+  const filteredOrders = userOrders.filter(order => {
     const matchesStatus = filterStatus === 'all' || order.status === filterStatus;
-    const matchesSearch = order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
   });
 
@@ -119,61 +107,52 @@ const Orders = () => {
     }
   };
 
-  // Update order status
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrders(orders.map(order => 
-      order.id === orderId 
-        ? { ...order, status: newStatus }
-        : order
-    ));
-  };
-
-  // Calculate total revenue
-  const totalRevenue = orders
+  // Calculate total spent
+  const totalSpent = userOrders
     .filter(order => order.status === 'completed')
-    .reduce((sum, order) => sum + parseInt(order.totalAmount.replace('₹', '')), 0);
+    .reduce((sum, order) => sum + parseInt(order.totalAmount.replace('Rs. ', '')), 0);
 
   // Get orders count by status
   const getOrdersCount = (status) => {
-    return orders.filter(order => order.status === status).length;
+    return userOrders.filter(order => order.status === status).length;
   };
 
   return (
     <div className="orders-container">
       {/* Header */}
       <div className="orders-header">
-        <h1>📋 Orders Management</h1>
-        <p>Track and manage all canteen orders</p>
+        <h1>📋 My Orders</h1>
+        <p>Welcome back, {currentUser.name}! Here are your order history</p>
       </div>
 
-      {/* Stats Cards */}
+      {/* User Stats */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">📊</div>
           <div className="stat-content">
             <h3>Total Orders</h3>
-            <p className="stat-number">{orders.length}</p>
+            <p className="stat-number">{userOrders.length}</p>
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">💰</div>
           <div className="stat-content">
-            <h3>Total Revenue</h3>
-            <p className="stat-number">₹{totalRevenue}</p>
+            <h3>Total Spent</h3>
+                         <p className="stat-number">Rs. {totalSpent}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">✅</div>
+          <div className="stat-content">
+            <h3>Completed</h3>
+            <p className="stat-number">{getOrdersCount('completed')}</p>
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">⏳</div>
           <div className="stat-content">
-            <h3>Pending</h3>
-            <p className="stat-number">{getOrdersCount('pending')}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">👨‍🍳</div>
-          <div className="stat-content">
-            <h3>Preparing</h3>
-            <p className="stat-number">{getOrdersCount('preparing')}</p>
+            <h3>Active Orders</h3>
+            <p className="stat-number">{getOrdersCount('pending') + getOrdersCount('preparing')}</p>
           </div>
         </div>
       </div>
@@ -183,7 +162,7 @@ const Orders = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="Search by customer name or order number..."
+            placeholder="Search by order number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -226,7 +205,7 @@ const Orders = () => {
       {/* Orders List */}
       <div className="orders-content">
         <div className="orders-list">
-          <h2>Order History</h2>
+          <h2>Your Order History</h2>
           {filteredOrders.length === 0 ? (
             <div className="no-orders">
               <p>No orders found matching your criteria</p>
@@ -247,9 +226,6 @@ const Orders = () => {
                     >
                       {getStatusIcon(order.status)} {order.status}
                     </div>
-                  </div>
-                  <div className="order-customer">
-                    <strong>{order.customerName}</strong>
                   </div>
                   <div className="order-items">
                     {order.items.slice(0, 2).map((item, index) => (
@@ -290,10 +266,6 @@ const Orders = () => {
                 <div className="detail-row">
                   <span className="detail-label">Order Number:</span>
                   <span className="detail-value">{selectedOrder.orderNumber}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="detail-label">Customer:</span>
-                  <span className="detail-value">{selectedOrder.customerName}</span>
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">Order Time:</span>
@@ -364,35 +336,6 @@ const Orders = () => {
                     </div>
                   )}
                 </div>
-
-                {/* Status Update Buttons */}
-                {selectedOrder.status === 'pending' && (
-                  <div className="status-actions">
-                    <button 
-                      className="status-btn preparing"
-                      onClick={() => updateOrderStatus(selectedOrder.id, 'preparing')}
-                    >
-                      Start Preparing
-                    </button>
-                    <button 
-                      className="status-btn cancelled"
-                      onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')}
-                    >
-                      Cancel Order
-                    </button>
-                  </div>
-                )}
-
-                {selectedOrder.status === 'preparing' && (
-                  <div className="status-actions">
-                    <button 
-                      className="status-btn completed"
-                      onClick={() => updateOrderStatus(selectedOrder.id, 'completed')}
-                    >
-                      Mark as Completed
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </div>

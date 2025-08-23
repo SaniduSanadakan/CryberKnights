@@ -36,7 +36,7 @@ const Home = () => {
     {
       id: 1,
       name: "Grilled Chicken Biryani",
-      price: "₹120",
+              price: "Rs. 120",
       description: "Aromatic basmati rice with tender grilled chicken and spices",
       image: "🍗",
       category: "Main Course"
@@ -44,7 +44,7 @@ const Home = () => {
     {
       id: 2,
       name: "Paneer Butter Masala",
-      price: "₹90",
+              price: "Rs. 90",
       description: "Creamy and rich paneer curry with butter and spices",
       image: "🧀",
       category: "Vegetarian"
@@ -52,7 +52,7 @@ const Home = () => {
     {
       id: 3,
       name: "Chocolate Brownie",
-      price: "₹40",
+              price: "Rs. 40",
       description: "Warm chocolate brownie with vanilla ice cream",
       image: "🍫",
       category: "Dessert"
@@ -65,7 +65,7 @@ const Home = () => {
     {
       id: 4,
       name: "Veg Fried Rice",
-      price: "₹80",
+              price: "Rs. 80",
       description: "Stir-fried rice with fresh vegetables",
       image: "🍚",
       category: "Main Course"
@@ -73,7 +73,7 @@ const Home = () => {
     {
       id: 5,
       name: "Chicken Curry",
-      price: "₹100",
+              price: "Rs. 100",
       description: "Spicy chicken curry with onions and tomatoes",
       image: "🍗",
       category: "Main Course"
@@ -81,7 +81,7 @@ const Home = () => {
     {
       id: 6,
       name: "Gulab Jamun",
-      price: "₹30",
+              price: "Rs. 30",
       description: "Sweet milk dumplings in sugar syrup",
       image: "🍯",
       category: "Dessert"
@@ -93,7 +93,7 @@ const Home = () => {
     {
       id: 1,
       name: "Samosa",
-      price: "₹15",
+      price: "Rs. 15",
       description: "Crispy pastry with potato filling",
       image: "🥟",
       category: "Snacks"
@@ -101,7 +101,7 @@ const Home = () => {
     {
       id: 2,
       name: "Vada Pav",
-      price: "₹20",
+      price: "Rs. 20",
       description: "Spicy potato fritter in bread",
       image: "🥪",
       category: "Snacks"
@@ -109,7 +109,7 @@ const Home = () => {
     {
       id: 3,
       name: "Tea",
-      price: "₹10",
+      price: "Rs. 10",
       description: "Hot masala chai",
       image: "☕",
       category: "Beverages"
@@ -117,7 +117,7 @@ const Home = () => {
     {
       id: 4,
       name: "Coffee",
-      price: "₹15",
+      price: "Rs. 15",
       description: "Hot filter coffee",
       image: "☕",
       category: "Beverages"
@@ -125,7 +125,7 @@ const Home = () => {
     {
       id: 5,
       name: "Biscuits",
-      price: "₹5",
+      price: "Rs. 5",
       description: "Assorted cookies",
       image: "🍪",
       category: "Snacks"
@@ -243,18 +243,18 @@ const Home = () => {
     
     // Specific meal queries
     if (lowerMessage.includes('biryani') || lowerMessage.includes('chicken')) {
-      return "Grilled Chicken Biryani is today's special at ₹120. It's aromatic basmati rice with tender grilled chicken and spices. Add it to your wishlist!";
+      return "Grilled Chicken Biryani is today's special at Rs. 120. It's aromatic basmati rice with tender grilled chicken and spices. Add it to your wishlist!";
     }
     if (lowerMessage.includes('paneer') || lowerMessage.includes('butter')) {
-      return "Paneer Butter Masala is today's special at ₹90. It's a creamy and rich paneer curry with butter and spices. Perfect for vegetarians!";
+      return "Paneer Butter Masala is today's special at Rs. 90. It's a creamy and rich paneer curry with butter and spices. Perfect for vegetarians!";
     }
     if (lowerMessage.includes('brownie') || lowerMessage.includes('chocolate') || lowerMessage.includes('dessert')) {
-      return "Chocolate Brownie is today's special at ₹40. It's a warm chocolate brownie served with vanilla ice cream. A perfect sweet treat!";
+      return "Chocolate Brownie is today's special at Rs. 40. It's a warm chocolate brownie served with vanilla ice cream. A perfect sweet treat!";
     }
     
     // Price queries
     if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('expensive')) {
-      return `Our meal prices range from ₹30 to ₹120. Today's specials: Biryani (₹120), Paneer Butter Masala (₹90), Chocolate Brownie (₹40). Great value for money!`;
+      return `Our meal prices range from Rs. 30 to Rs. 120. Today's specials: Biryani (Rs. 120), Paneer Butter Masala (Rs. 90), Chocolate Brownie (Rs. 40). Great value for money!`;
     }
     
     // Wishlist queries
