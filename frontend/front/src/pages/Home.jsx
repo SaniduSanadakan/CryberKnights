@@ -15,6 +15,21 @@ const Home = () => {
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showTokenForm, setShowTokenForm] = useState(false);
+  const [tokenFormData, setTokenFormData] = useState({
+    foodType: '',
+    paymentMethod: '',
+    selectedMeal: '',
+    selectedSnack: '',
+    preorderTime: '',
+    specialInstructions: ''
+  });
+
+  // Add useEffect to ensure chatbot is properly initialized
+  useEffect(() => {
+    // This ensures the chatbot component is mounted properly
+    console.log('Home component mounted, chatbot ready');
+  }, []);
 
   // Today's special meals
   const todaysSpecials = [
@@ -73,22 +88,98 @@ const Home = () => {
     }
   ];
 
+  // Available snacks
+  const availableSnacks = [
+    {
+      id: 1,
+      name: "Samosa",
+      price: "₹15",
+      description: "Crispy pastry with potato filling",
+      image: "🥟",
+      category: "Snacks"
+    },
+    {
+      id: 2,
+      name: "Vada Pav",
+      price: "₹20",
+      description: "Spicy potato fritter in bread",
+      image: "🥪",
+      category: "Snacks"
+    },
+    {
+      id: 3,
+      name: "Tea",
+      price: "₹10",
+      description: "Hot masala chai",
+      image: "☕",
+      category: "Beverages"
+    },
+    {
+      id: 4,
+      name: "Coffee",
+      price: "₹15",
+      description: "Hot filter coffee",
+      image: "☕",
+      category: "Beverages"
+    },
+    {
+      id: 5,
+      name: "Biscuits",
+      price: "₹5",
+      description: "Assorted cookies",
+      image: "🍪",
+      category: "Snacks"
+    }
+  ];
+
   // Allocate token function
   const allocateToken = () => {
     if (tokens > 0 && !activeToken) {
-      const newToken = {
-        id: Date.now(),
-        allocatedAt: new Date(),
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
-      };
-      setActiveToken(newToken);
-      setTokens(tokens - 1);
-      
-      // Auto-expire token after 10 minutes
-      setTimeout(() => {
-        setActiveToken(null);
-      }, 10 * 60 * 1000);
+      setShowTokenForm(true);
     }
+  };
+
+  // Handle token form submission
+  const handleTokenFormSubmit = (e) => {
+    e.preventDefault();
+    
+    const newToken = {
+      id: Date.now(),
+      allocatedAt: new Date(),
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+      foodType: tokenFormData.foodType,
+      paymentMethod: tokenFormData.paymentMethod,
+      selectedItem: tokenFormData.foodType === 'meal' ? tokenFormData.selectedMeal : 
+                   tokenFormData.foodType === 'snack' ? tokenFormData.selectedSnack : 'Preorder',
+      preorderTime: tokenFormData.preorderTime,
+      specialInstructions: tokenFormData.specialInstructions
+    };
+    
+    setActiveToken(newToken);
+    setTokens(tokens - 1);
+    setShowTokenForm(false);
+    setTokenFormData({
+      foodType: '',
+      paymentMethod: '',
+      selectedMeal: '',
+      selectedSnack: '',
+      preorderTime: '',
+      specialInstructions: ''
+    });
+    
+    // Auto-expire token after 10 minutes
+    setTimeout(() => {
+      setActiveToken(null);
+    }, 10 * 60 * 1000);
+  };
+
+  // Handle token form input changes
+  const handleTokenFormChange = (e) => {
+    const { name, value } = e.target;
+    setTokenFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Add to wishlist
@@ -245,21 +336,28 @@ const Home = () => {
                   <span className="token-id">#{activeToken.id}</span>
                   <span className="token-time">Time Remaining: {getTimeRemaining()}</span>
                 </div>
-                <p>Show this token to get your food!</p>
-              </div>
-            ) : (
-              <div className="no-token">
-                <h3>No Active Token</h3>
-                <p>Allocate a token to get food from the canteen</p>
-                <button 
-                  className="allocate-btn"
-                  onClick={allocateToken}
-                  disabled={tokens === 0}
-                >
-                  {tokens === 0 ? 'No Tokens Left' : 'Allocate Token'}
-                </button>
-              </div>
-            )}
+                                 <p>Show this token to get your food!</p>
+                 <div className="token-details">
+                   <p><strong>Food Type:</strong> {activeToken.foodType}</p>
+                   <p><strong>Selected Item:</strong> {activeToken.selectedItem}</p>
+                   <p><strong>Payment:</strong> {activeToken.paymentMethod}</p>
+                   {activeToken.preorderTime && <p><strong>Preorder Time:</strong> {activeToken.preorderTime}</p>}
+                   {activeToken.specialInstructions && <p><strong>Special Instructions:</strong> {activeToken.specialInstructions}</p>}
+                 </div>
+               </div>
+             ) : (
+               <div className="no-token">
+                 <h3>No Active Token</h3>
+                 <p>Allocate a token to get food from the canteen</p>
+                 <button 
+                   className="allocate-btn"
+                   onClick={allocateToken}
+                   disabled={tokens === 0}
+                 >
+                   {tokens === 0 ? 'No Tokens Left' : 'Allocate Token'}
+                 </button>
+               </div>
+             )}
           </div>
         </div>
       </section>
@@ -322,14 +420,18 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Chatbot */}
-      <div className={`chatbot ${isChatOpen ? 'open' : ''}`}>
-        <button 
-          className="chat-toggle"
-          onClick={() => setIsChatOpen(!isChatOpen)}
-        >
-          {isChatOpen ? '✕' : '💬'}
-        </button>
+             {/* Chatbot */}
+       <div className={`chatbot ${isChatOpen ? 'open' : ''}`}>
+         <button 
+           className="chat-toggle"
+           onClick={() => {
+             console.log('Chat toggle clicked, current state:', isChatOpen);
+             setIsChatOpen(!isChatOpen);
+           }}
+           title="Chat with Canteen Assistant"
+         >
+           {isChatOpen ? '✕' : '💬'}
+         </button>
         
         {isChatOpen && (
           <div className="chat-container">
@@ -372,10 +474,179 @@ const Home = () => {
                <button onClick={sendMessage}>Send</button>
              </div>
           </div>
-        )}
-      </div>
-    </div>
-  );
-};
+                 )}
+       </div>
+
+       {/* Token Allocation Form Modal */}
+       {showTokenForm && (
+         <div className="token-form-overlay">
+           <div className="token-form-modal">
+             <div className="modal-header">
+               <h3>🍽️ Allocate Food Token</h3>
+               <button 
+                 className="close-btn"
+                 onClick={() => setShowTokenForm(false)}
+               >
+                 ✕
+               </button>
+             </div>
+             
+             <form onSubmit={handleTokenFormSubmit} className="token-allocation-form">
+               <div className="form-section">
+                 <h4>Food Type *</h4>
+                 <div className="radio-group">
+                   <label>
+                     <input
+                       type="radio"
+                       name="foodType"
+                       value="meal"
+                       checked={tokenFormData.foodType === 'meal'}
+                       onChange={handleTokenFormChange}
+                       required
+                     />
+                     <span className="radio-label">🍽️ Meal</span>
+                   </label>
+                   <label>
+                     <input
+                       type="radio"
+                       name="foodType"
+                       value="snack"
+                       checked={tokenFormData.foodType === 'snack'}
+                       onChange={handleTokenFormChange}
+                       required
+                     />
+                     <span className="radio-label">🥪 Snack</span>
+                   </label>
+                   <label>
+                     <input
+                       type="radio"
+                       name="foodType"
+                       value="preorder"
+                       checked={tokenFormData.foodType === 'preorder'}
+                       onChange={handleTokenFormChange}
+                       required
+                     />
+                     <span className="radio-label">⏰ Preorder</span>
+                   </label>
+                 </div>
+               </div>
+
+               {tokenFormData.foodType === 'meal' && (
+                 <div className="form-section">
+                   <h4>Select Meal *</h4>
+                   <select
+                     name="selectedMeal"
+                     value={tokenFormData.selectedMeal}
+                     onChange={handleTokenFormChange}
+                     required
+                     className="form-select"
+                   >
+                     <option value="">Choose a meal...</option>
+                     {allMeals.map(meal => (
+                       <option key={meal.id} value={meal.name}>
+                         {meal.name} - {meal.price}
+                       </option>
+                     ))}
+                   </select>
+                 </div>
+               )}
+
+               {tokenFormData.foodType === 'snack' && (
+                 <div className="form-section">
+                   <h4>Select Snack *</h4>
+                   <select
+                     name="selectedSnack"
+                     value={tokenFormData.selectedSnack}
+                     onChange={handleTokenFormChange}
+                     required
+                     className="form-select"
+                   >
+                     <option value="">Choose a snack...</option>
+                     {availableSnacks.map(snack => (
+                       <option key={snack.id} value={snack.name}>
+                         {snack.name} - {snack.price}
+                       </option>
+                     ))}
+                   </select>
+                 </div>
+               )}
+
+               {tokenFormData.foodType === 'preorder' && (
+                 <div className="form-section">
+                   <h4>Preorder Time *</h4>
+                   <input
+                     type="time"
+                     name="preorderTime"
+                     value={tokenFormData.preorderTime}
+                     onChange={handleTokenFormChange}
+                     required
+                     className="form-input"
+                     min="08:00"
+                     max="20:00"
+                   />
+                   <p className="form-help">Available between 8:00 AM - 8:00 PM</p>
+                 </div>
+               )}
+
+               <div className="form-section">
+                 <h4>Payment Method *</h4>
+                 <div className="radio-group">
+                   <label>
+                     <input
+                       type="radio"
+                       name="paymentMethod"
+                       value="cash"
+                       checked={tokenFormData.paymentMethod === 'cash'}
+                       onChange={handleTokenFormChange}
+                       required
+                     />
+                     <span className="radio-label">💵 Cash</span>
+                   </label>
+                   <label>
+                     <input
+                       type="radio"
+                       name="paymentMethod"
+                       value="card"
+                       checked={tokenFormData.paymentMethod === 'card'}
+                       onChange={handleTokenFormChange}
+                       required
+                     />
+                     <span className="radio-label">💳 Card</span>
+                   </label>
+                 </div>
+               </div>
+
+               <div className="form-section">
+                 <h4>Special Instructions (Optional)</h4>
+                 <textarea
+                   name="specialInstructions"
+                   value={tokenFormData.specialInstructions}
+                   onChange={handleTokenFormChange}
+                   placeholder="Any special requests or dietary requirements..."
+                   className="form-textarea"
+                   rows="3"
+                 />
+               </div>
+
+               <div className="form-actions">
+                 <button type="submit" className="submit-token-btn">
+                   <span className="btn-icon">🎫</span>
+                   Allocate Token
+                 </button>
+                 <button 
+                   type="button" 
+                   className="cancel-btn"
+                   onClick={() => setShowTokenForm(false)}
+                 >
+                   Cancel
+                 </button>
+               </div>
+             </form>
+           </div>
+         </div>
+       )}
+     </div>
+   );
+ };
 
 export default Home;
