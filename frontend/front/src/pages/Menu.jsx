@@ -5,6 +5,8 @@ const Menu = () => {
   const [activeCategory, setActiveCategory] = useState('breakfast');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
 
   // Menu data organized by categories with Sinhala names and real images
   const menuData = {
@@ -18,7 +20,9 @@ const Menu = () => {
         category: "Breakfast",
         spicy: false,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "5-10 minutes"
       },
       {
         id: 2,
@@ -29,7 +33,9 @@ const Menu = () => {
         category: "Breakfast",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "8-12 minutes"
       },
       {
         id: 3,
@@ -40,7 +46,9 @@ const Menu = () => {
         category: "Breakfast",
         spicy: true,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "10-15 minutes"
       },
       {
         id: 4,
@@ -51,7 +59,9 @@ const Menu = () => {
         category: "Breakfast",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "12-18 minutes"
       },
       {
         id: 5,
@@ -62,7 +72,9 @@ const Menu = () => {
         category: "Breakfast",
         spicy: false,
         vegetarian: false,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "6-10 minutes"
       },
       {
         id: 6,
@@ -73,7 +85,9 @@ const Menu = () => {
         category: "Breakfast",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "3-5 minutes"
       }
     ],
     lunch: [
@@ -86,7 +100,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: true,
         vegetarian: false,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "15-20 minutes"
       },
       {
         id: 8,
@@ -97,7 +113,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: true,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "12-18 minutes"
       },
       {
         id: 9,
@@ -108,7 +126,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: true,
         vegetarian: false,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "18-25 minutes"
       },
       {
         id: 10,
@@ -119,7 +139,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "10-15 minutes"
       },
       {
         id: 11,
@@ -130,7 +152,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: true,
         vegetarian: false,
-        popular: false
+        popular: false,
+        available: false,
+        preparationTime: "20-25 minutes"
       },
       {
         id: 12,
@@ -141,7 +165,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "8-12 minutes"
       },
       {
         id: 13,
@@ -152,7 +178,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: true,
         vegetarian: false,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "25-30 minutes"
       },
       {
         id: 14,
@@ -163,7 +191,9 @@ const Menu = () => {
         category: "Lunch",
         spicy: true,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "15-20 minutes"
       }
     ],
     dinner: [
@@ -176,7 +206,9 @@ const Menu = () => {
         category: "Dinner",
         spicy: true,
         vegetarian: false,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "30-35 minutes"
       },
       {
         id: 16,
@@ -187,7 +219,9 @@ const Menu = () => {
         category: "Dinner",
         spicy: false,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "5-8 minutes"
       },
       {
         id: 17,
@@ -198,7 +232,9 @@ const Menu = () => {
         category: "Dinner",
         spicy: true,
         vegetarian: false,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "25-30 minutes"
       },
       {
         id: 18,
@@ -209,7 +245,9 @@ const Menu = () => {
         category: "Dinner",
         spicy: true,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "8-12 minutes"
       },
       {
         id: 19,
@@ -220,7 +258,9 @@ const Menu = () => {
         category: "Dinner",
         spicy: true,
         vegetarian: false,
-        popular: true
+        popular: true,
+        available: false,
+        preparationTime: "20-25 minutes"
       },
       {
         id: 20,
@@ -231,7 +271,9 @@ const Menu = () => {
         category: "Dinner",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "12-18 minutes"
       }
     ],
     snacks: [
@@ -244,7 +286,9 @@ const Menu = () => {
         category: "Snacks",
         spicy: true,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "3-5 minutes"
       },
       {
         id: 22,
@@ -255,7 +299,9 @@ const Menu = () => {
         category: "Snacks",
         spicy: true,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "5-8 minutes"
       },
       {
         id: 23,
@@ -266,7 +312,9 @@ const Menu = () => {
         category: "Snacks",
         spicy: true,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "4-6 minutes"
       },
       {
         id: 24,
@@ -277,7 +325,9 @@ const Menu = () => {
         category: "Snacks",
         spicy: true,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "2-4 minutes"
       }
     ],
     beverages: [
@@ -290,7 +340,9 @@ const Menu = () => {
         category: "Beverages",
         spicy: false,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "2-3 minutes"
       },
       {
         id: 26,
@@ -301,7 +353,9 @@ const Menu = () => {
         category: "Beverages",
         spicy: false,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "1-2 minutes"
       },
       {
         id: 27,
@@ -312,7 +366,9 @@ const Menu = () => {
         category: "Beverages",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "3-5 minutes"
       },
       {
         id: 28,
@@ -323,7 +379,9 @@ const Menu = () => {
         category: "Beverages",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "1-2 minutes"
       }
     ],
     desserts: [
@@ -336,7 +394,9 @@ const Menu = () => {
         category: "Desserts",
         spicy: false,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "5-8 minutes"
       },
       {
         id: 30,
@@ -347,7 +407,9 @@ const Menu = () => {
         category: "Desserts",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "2-3 minutes"
       },
       {
         id: 31,
@@ -358,7 +420,9 @@ const Menu = () => {
         category: "Desserts",
         spicy: false,
         vegetarian: true,
-        popular: true
+        popular: true,
+        available: true,
+        preparationTime: "3-5 minutes"
       },
       {
         id: 32,
@@ -369,7 +433,9 @@ const Menu = () => {
         category: "Desserts",
         spicy: false,
         vegetarian: true,
-        popular: false
+        popular: false,
+        available: true,
+        preparationTime: "1-2 minutes"
       }
     ]
   };
@@ -388,12 +454,63 @@ const Menu = () => {
     setSelectedItem(null);
   };
 
+  const addToCart = (item) => {
+    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+    if (existingItem) {
+      setCart(cart.map(cartItem => 
+        cartItem.id === item.id 
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      ));
+    } else {
+      setCart([...cart, { ...item, quantity: 1 }]);
+    }
+    setShowCart(true);
+  };
+
+  const removeFromCart = (itemId) => {
+    setCart(cart.filter(item => item.id !== itemId));
+  };
+
+  const updateQuantity = (itemId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(itemId);
+    } else {
+      setCart(cart.map(item => 
+        item.id === itemId 
+          ? { ...item, quantity: newQuantity }
+          : item
+      ));
+    }
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => {
+      const price = parseInt(item.price.replace('Rs. ', ''));
+      return total + (price * item.quantity);
+    }, 0);
+  };
+
+  const placeOrder = () => {
+    if (cart.length === 0) return;
+    
+    // Here you would typically send the order to your backend
+    alert(`Order placed successfully! Total: Rs. ${getTotalPrice()}`);
+    setCart([]);
+    setShowCart(false);
+  };
+
   return (
     <div className="menu-container">
       {/* Header */}
       <div className="menu-header">
-        <h1>🍽️ Our Menu</h1>
-        <p>Explore our delicious Sinhala cuisine from breakfast to dinner</p>
+        <h1>🏫 Faculty Canteen Menu</h1>
+        <p>Order your favorite Sinhala dishes for quick pickup</p>
+        <div className="canteen-info">
+          <span>🕐 Open: 7:00 AM - 8:00 PM</span>
+          <span>📞 Call: +94 11 234 5678</span>
+          <span>📍 Location: Faculty Building, Ground Floor</span>
+        </div>
       </div>
 
       {/* Search Bar */}
@@ -401,7 +518,7 @@ const Menu = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="Search for Sinhala dishes..."
+            placeholder="Search for dishes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -415,37 +532,37 @@ const Menu = () => {
           className={`tab ${activeCategory === 'breakfast' ? 'active' : ''}`}
           onClick={() => setActiveCategory('breakfast')}
         >
-          🌅 Breakfast
+          🌅 Breakfast (7AM-10AM)
         </button>
         <button
           className={`tab ${activeCategory === 'lunch' ? 'active' : ''}`}
           onClick={() => setActiveCategory('lunch')}
         >
-          🍽️ Lunch
+          🍽️ Lunch (12PM-3PM)
         </button>
         <button
           className={`tab ${activeCategory === 'dinner' ? 'active' : ''}`}
           onClick={() => setActiveCategory('dinner')}
         >
-          🌙 Dinner
+          🌙 Dinner (6PM-8PM)
         </button>
         <button
           className={`tab ${activeCategory === 'snacks' ? 'active' : ''}`}
           onClick={() => setActiveCategory('snacks')}
         >
-          🥪 Snacks
+          🥪 Snacks (All Day)
         </button>
         <button
           className={`tab ${activeCategory === 'beverages' ? 'active' : ''}`}
           onClick={() => setActiveCategory('beverages')}
         >
-          ☕ Beverages
+          ☕ Beverages (All Day)
         </button>
         <button
           className={`tab ${activeCategory === 'desserts' ? 'active' : ''}`}
           onClick={() => setActiveCategory('desserts')}
         >
-          🍰 Desserts
+          🍰 Desserts (All Day)
         </button>
       </div>
 
@@ -455,12 +572,13 @@ const Menu = () => {
           {filteredItems.map(item => (
             <div
               key={item.id}
-              className={`menu-item ${item.popular ? 'popular' : ''}`}
+              className={`menu-item ${item.popular ? 'popular' : ''} ${!item.available ? 'unavailable' : ''}`}
               onClick={() => handleItemClick(item)}
             >
               <div className="item-image">
                 <img src={item.image} alt={item.name} />
                 {item.popular && <span className="popular-badge">🔥 Popular</span>}
+                {!item.available && <span className="unavailable-badge">❌ Out of Stock</span>}
               </div>
               <div className="item-content">
                 <div className="item-header">
@@ -468,12 +586,28 @@ const Menu = () => {
                   <span className="item-price">{item.price}</span>
                 </div>
                 <p className="item-description">{item.description}</p>
-                <div className="item-tags">
-                  {item.vegetarian && <span className="tag veg">🥬 Veg</span>}
-                  {!item.vegetarian && <span className="tag non-veg">🍗 Non-Veg</span>}
-                  {item.spicy && <span className="tag spicy">🌶️ Spicy</span>}
-                  {!item.spicy && <span className="tag mild">😊 Mild</span>}
+                <div className="item-details">
+                  <div className="item-tags">
+                    {item.vegetarian && <span className="tag veg">🥬 Veg</span>}
+                    {!item.vegetarian && <span className="tag non-veg">🍗 Non-Veg</span>}
+                    {item.spicy && <span className="tag spicy">🌶️ Spicy</span>}
+                    {!item.spicy && <span className="tag mild">😊 Mild</span>}
+                  </div>
+                  <div className="prep-time">
+                    <span>⏱️ {item.preparationTime}</span>
+                  </div>
                 </div>
+                {item.available && (
+                  <button 
+                    className="add-to-cart-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(item);
+                    }}
+                  >
+                    🛒 Add to Order
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -486,6 +620,45 @@ const Menu = () => {
         )}
       </div>
 
+      {/* Cart Sidebar */}
+      {showCart && (
+        <div className="cart-sidebar">
+          <div className="cart-header">
+            <h3>🛒 Your Order</h3>
+            <button className="close-cart" onClick={() => setShowCart(false)}>✕</button>
+          </div>
+          <div className="cart-items">
+            {cart.length === 0 ? (
+              <p className="empty-cart">Your order is empty</p>
+            ) : (
+              cart.map(item => (
+                <div key={item.id} className="cart-item">
+                  <div className="cart-item-info">
+                    <h4>{item.name}</h4>
+                    <p>{item.price}</p>
+                  </div>
+                  <div className="cart-item-controls">
+                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          {cart.length > 0 && (
+            <div className="cart-footer">
+              <div className="cart-total">
+                <strong>Total: Rs. {getTotalPrice()}</strong>
+              </div>
+              <button className="place-order-btn" onClick={placeOrder}>
+                📋 Place Order
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Item Detail Modal */}
       {selectedItem && (
         <div className="modal-overlay" onClick={closeModal}>
@@ -495,20 +668,40 @@ const Menu = () => {
               <div className="modal-image">
                 <img src={selectedItem.image} alt={selectedItem.name} />
                 {selectedItem.popular && <span className="popular-badge">🔥 Popular</span>}
+                {!selectedItem.available && <span className="unavailable-badge">❌ Out of Stock</span>}
               </div>
               <div className="modal-info">
                 <h2>{selectedItem.name}</h2>
                 <p className="modal-description">{selectedItem.description}</p>
                 <div className="modal-price">{selectedItem.price}</div>
-                <div className="modal-tags">
-                  {selectedItem.vegetarian && <span className="tag veg">🥬 Vegetarian</span>}
-                  {!selectedItem.vegetarian && <span className="tag non-veg">🍗 Non-Vegetarian</span>}
-                  {selectedItem.spicy && <span className="tag spicy">🌶️ Spicy</span>}
-                  {!selectedItem.spicy && <span className="tag mild">😊 Mild</span>}
+                <div className="modal-details">
+                  <div className="modal-tags">
+                    {selectedItem.vegetarian && <span className="tag veg">🥬 Vegetarian</span>}
+                    {!selectedItem.vegetarian && <span className="tag non-veg">🍗 Non-Vegetarian</span>}
+                    {selectedItem.spicy && <span className="tag spicy">🌶️ Spicy</span>}
+                    {!selectedItem.spicy && <span className="tag mild">😊 Mild</span>}
+                  </div>
+                  <div className="modal-prep-time">
+                    <strong>Preparation Time:</strong> {selectedItem.preparationTime}
+                  </div>
+                  <div className="modal-category">
+                    <strong>Category:</strong> {selectedItem.category}
+                  </div>
+                  <div className="modal-availability">
+                    <strong>Status:</strong> {selectedItem.available ? '✅ Available' : '❌ Out of Stock'}
+                  </div>
                 </div>
-                <div className="modal-category">
-                  <strong>Category:</strong> {selectedItem.category}
-                </div>
+                {selectedItem.available && (
+                  <button 
+                    className="modal-add-to-cart-btn"
+                    onClick={() => {
+                      addToCart(selectedItem);
+                      closeModal();
+                    }}
+                  >
+                    🛒 Add to Order
+                  </button>
+                )}
               </div>
             </div>
           </div>
