@@ -5,7 +5,14 @@ const Home = () => {
   const [tokens, setTokens] = useState(5); // Default tokens
   const [activeToken, setActiveToken] = useState(null);
   const [wishlist, setWishlist] = useState([]);
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      text: "Hello! I'm your Canteen Assistant. I can help you with today's specials, token allocation, prices, and more. What would you like to know?",
+      sender: 'bot',
+      timestamp: new Date()
+    }
+  ]);
   const [chatInput, setChatInput] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -125,17 +132,67 @@ const Home = () => {
 
   const getBotResponse = (message) => {
     const lowerMessage = message.toLowerCase();
-    if (lowerMessage.includes('menu') || lowerMessage.includes('food')) {
-      return "Today's specials include Grilled Chicken Biryani, Paneer Butter Masala, and Chocolate Brownie. You can also check our full menu!";
-    } else if (lowerMessage.includes('token') || lowerMessage.includes('queue')) {
-      return "You can allocate a token to get food. Each token is valid for 10 minutes and you have " + tokens + " tokens remaining.";
-    } else if (lowerMessage.includes('price') || lowerMessage.includes('cost')) {
-      return "Our meals range from ₹30 to ₹120. Today's specials are at great prices!";
-    } else if (lowerMessage.includes('time') || lowerMessage.includes('hours')) {
-      return "We're open from 8:00 AM to 8:00 PM, Monday to Friday.";
-    } else {
-      return "Hello! I'm here to help you with menu information, token allocation, and any other questions about our canteen.";
+    
+    // Token-related queries
+    if (lowerMessage.includes('token') || lowerMessage.includes('queue') || lowerMessage.includes('wait')) {
+      if (activeToken) {
+        return `You have an active token #${activeToken.id} with ${getTimeRemaining()} remaining. Show this token to get your food!`;
+      } else if (tokens > 0) {
+        return `You have ${tokens} tokens available. Click "Allocate Token" to get a food token. Each token is valid for 10 minutes.`;
+      } else {
+        return "Sorry, you have no tokens left. Tokens are limited and refresh daily.";
+      }
     }
+    
+    // Today's specials queries
+    if (lowerMessage.includes('special') || lowerMessage.includes('today') || lowerMessage.includes('menu')) {
+      const specialsList = todaysSpecials.map(meal => `${meal.name} (${meal.price})`).join(', ');
+      return `Today's special meals are: ${specialsList}. All specials are marked with a star and have great prices!`;
+    }
+    
+    // Specific meal queries
+    if (lowerMessage.includes('biryani') || lowerMessage.includes('chicken')) {
+      return "Grilled Chicken Biryani is today's special at ₹120. It's aromatic basmati rice with tender grilled chicken and spices. Add it to your wishlist!";
+    }
+    if (lowerMessage.includes('paneer') || lowerMessage.includes('butter')) {
+      return "Paneer Butter Masala is today's special at ₹90. It's a creamy and rich paneer curry with butter and spices. Perfect for vegetarians!";
+    }
+    if (lowerMessage.includes('brownie') || lowerMessage.includes('chocolate') || lowerMessage.includes('dessert')) {
+      return "Chocolate Brownie is today's special at ₹40. It's a warm chocolate brownie served with vanilla ice cream. A perfect sweet treat!";
+    }
+    
+    // Price queries
+    if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('expensive')) {
+      return `Our meal prices range from ₹30 to ₹120. Today's specials: Biryani (₹120), Paneer Butter Masala (₹90), Chocolate Brownie (₹40). Great value for money!`;
+    }
+    
+    // Wishlist queries
+    if (lowerMessage.includes('wishlist') || lowerMessage.includes('save') || lowerMessage.includes('favorite')) {
+      if (wishlist.length === 0) {
+        return "Your wishlist is empty. Click the heart icon on any meal to add it to your wishlist for later!";
+      } else {
+        const wishlistItems = wishlist.map(meal => meal.name).join(', ');
+        return `Your wishlist has ${wishlist.length} items: ${wishlistItems}. You can remove items by clicking the X button.`;
+      }
+    }
+    
+    // Operating hours
+    if (lowerMessage.includes('time') || lowerMessage.includes('hours') || lowerMessage.includes('open') || lowerMessage.includes('close')) {
+      return "We're open from 8:00 AM to 8:00 PM, Monday to Friday. Peak hours are 12:00-2:00 PM for lunch and 6:00-8:00 PM for dinner.";
+    }
+    
+    // Help queries
+    if (lowerMessage.includes('help') || lowerMessage.includes('how') || lowerMessage.includes('what')) {
+      return "I can help you with: Today's special meals, token allocation, prices, wishlist management, and operating hours. Just ask!";
+    }
+    
+    // Greeting
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+      return "Hello! Welcome to the Faculty of Technology Canteen. I'm here to help you with menu information, tokens, and any questions about our services!";
+    }
+    
+    // Default response
+    return "I'm not sure about that. I can help you with today's specials, token allocation, prices, wishlist, and operating hours. Try asking about our menu or tokens!";
   };
 
   // Format time remaining
@@ -276,10 +333,10 @@ const Home = () => {
         
         {isChatOpen && (
           <div className="chat-container">
-            <div className="chat-header">
-              <h3>Canteen Assistant</h3>
-              <p>Ask me anything about our menu and services!</p>
-            </div>
+                         <div className="chat-header">
+               <h3>🍽️ Canteen Assistant</h3>
+               <p>Ask me anything about our menu and services!</p>
+             </div>
             
             <div className="chat-messages">
               {chatMessages.map(message => (
@@ -297,16 +354,23 @@ const Home = () => {
               ))}
             </div>
             
-            <div className="chat-input">
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Type your message..."
-                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              />
-              <button onClick={sendMessage}>Send</button>
-            </div>
+                         <div className="chat-suggestions">
+               <button onClick={() => setChatInput("What are today's specials?")}>Today's Specials</button>
+               <button onClick={() => setChatInput("How many tokens do I have?")}>My Tokens</button>
+               <button onClick={() => setChatInput("What are the prices?")}>Prices</button>
+               <button onClick={() => setChatInput("Show my wishlist")}>My Wishlist</button>
+             </div>
+             
+             <div className="chat-input">
+               <input
+                 type="text"
+                 value={chatInput}
+                 onChange={(e) => setChatInput(e.target.value)}
+                 placeholder="Type your message..."
+                 onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+               />
+               <button onClick={sendMessage}>Send</button>
+             </div>
           </div>
         )}
       </div>
