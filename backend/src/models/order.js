@@ -5,20 +5,34 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    student_id: {
-        type: Number,
+    student: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
-    item: {
+    items: [{
+        item: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Menu',
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            min: 1
+        },
+        price: {
+            type: Number,
+            required: true
+        }
+    }],
+    status: {
         type: String,
-        required: true
-    },
-    token_id: {
-        type: Number,
-        required: true
+        enum: ['pending', 'preparing', 'ready', 'completed', 'cancelled'],
+        default: 'pending'
     },
     total_price: {
-        type: mongoose.Decimal128,
+        type: Number,
         required: true
     },
     payment_type: {
@@ -26,10 +40,18 @@ const orderSchema = new mongoose.Schema({
         enum: ['Card', 'PaymentGateway', 'DigitalWallet'],
         default: 'Card'
     },
+    payment_status: {
+        type: String,
+        enum: ['pending', 'completed', 'failed'],
+        default: 'pending'
+    },
     meal_type: {
         type: String,
         enum: ['snack', 'drink', 'Pre Order'],
         required: true
+    },
+    notes: {
+        type: String
     }
 }, {
     timestamps: true // This will automatically add createdAt and updatedAt fields

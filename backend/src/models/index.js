@@ -1,6 +1,9 @@
-// This file defines the data models used in the application, including schema definitions and methods for interacting with the database.
-
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import Menu from './menu.js';
+import Order from './order.js';
+import OrderItem from './orderItem.js';
+import Stock from './stock.js';
+import Wishlist from './wishlist.js';
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -17,6 +20,29 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    role: {
+        type: String,
+        enum: ['student', 'staff'],
+        required: true
+    },
+    studentId: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+    staffId: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -25,6 +51,11 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = {
-    User
+export {
+    User,
+    Menu,
+    Order,
+    OrderItem,
+    Stock,
+    Wishlist
 };

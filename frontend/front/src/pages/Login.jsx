@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
@@ -29,8 +30,10 @@ const Login = () => {
     }, 1000);
   };
 
+  const navigate = useNavigate();
+  
   const handleSignUp = () => {
-    // Navigate to sign up page
+    navigate('/signup');
     console.log('Navigate to sign up page');
   };
 
